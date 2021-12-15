@@ -10,7 +10,7 @@ const formatAccount = (account) => account && `${account.slice(0, 6)}...${accoun
 
 const ConnectButton = ({label}) => {
   // hooks
-  const { activateBrowserWallet, account } = useEthers();
+  const { activateBrowserWallet, account, chainId } = useEthers();
   const etherBalance = useEtherBalance(account);
 
   // functions
@@ -18,7 +18,8 @@ const ConnectButton = ({label}) => {
     activateBrowserWallet();
   };
 
-  console.log('account:', account, etherBalance);
+  console.log('account, chainId, balance', account, chainId, etherBalance);
+  // render out
   return (
   <div className="w-full text-sm leading-4 font-medium text-green-900">
     { account ? (
