@@ -22,6 +22,9 @@ const NavBar = () => {
       <Link href="/">
         Home
       </Link>
+      <Link href="/pay">
+        Pay
+      </Link>
       <div>
         <Button label="Disconnect" onClick={handleDisconnect} />
       </div>
