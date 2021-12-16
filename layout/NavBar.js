@@ -25,6 +25,12 @@ const NavBar = () => {
       <Link href="/pay">
         Pay
       </Link>
+      <Link href="/sign">
+        Sign
+      </Link>
+      <Link href="/verify">
+        Verify
+      </Link>
       <div>
         <Button label="Disconnect" onClick={handleDisconnect} />
       </div>
