@@ -1,9 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { ethers } from "ethers";
+
+import { ErrorMessage } from '../components/ErrorMessage';
+import { SuccessMessage } from '../components/SuccessMessage';
+
+const verifyMessage = async ({ message, signer, signature }) => {
+  console.log('message, signer, signature:', message, signer, signature);
+  try {
+    const signerAddr = await ethers.utils.verifyMessage(message, signature);
+    if (signerAddr !== signer) {
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.log('verifyMessage error:', err);
+    return false;
+  }
+};
 
 const Verify = () => {
+  // hooks
+  const [message, setMessage] = useState('');
+  const [signature, setSignature] = useState('');
+  const [signer, setSigner] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  // functions
+  const handleVerify = async (e) => {
+    e.preventDefault();
+
+    setError('');
+    setMessage('');
+
+    const isValid = await verifyMessage({message, signer, signature});
+
+    if (isValid) {
+      setSuccess("Signature is valid!");
+    } else {
+      setError("Invalid signature");
+    } 
+  };
+
   // render out
   return (
-    <div>Verify</div>
+    <form className="flex content-center items-center justify-center m-4" onSubmit={handleVerify}>
+      <div className="w-1/2 shadow-lg mx-auto rounded-lg bg-white">
+        <main className="mt-4 p-4">
+          <h1 className="text-xl font-semibold text-gray-700 text-center">
+            Verify messages
+          </h1>
+          <div className="my-3">
+            <textarea
+              required
+              value={message}
+              className="w-full h-24 border-2 focus:ring focus:outline-none"
+              placeholder="Message"
+              onChange={e => setMessage(e.target.value)}
+            />
+          </div>
+          <div className="my-3">
+            <textarea
+              required
+              value={signature}
+              className="w-full h-24 border-2 focus:ring focus:outline-none"
+              placeholder="Signature"
+              onChange={e => setSignature(e.target.value)}
+            />
+          </div>
+          <div className="my-3">
+            <input
+              required
+              type="text"
+              value={signer}
+              className="w-full border-2 focus:ring focus:outline-none"
+              placeholder="Signer address"
+              onChange={e => setSigner(e.target.value)}
+            />            
+          </div>
+        </main>
+        <div className="p-4">
+          <button
+            type="submit"
+            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Sign message
+          </button>
+          <ErrorMessage message={error} />
+          <SuccessMessage message={success} />
+        </div>
+      </div>
+    </form>
   );
 }; 
 
