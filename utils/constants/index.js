@@ -1,1 +1,2 @@
-export { default as chainList } from './chainlist';
+export { default as chains } from './chains';
+export { default as tokens } from './tokens';
