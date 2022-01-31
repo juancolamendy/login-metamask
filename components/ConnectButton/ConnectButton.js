@@ -1,25 +1,56 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { useEthers, useEtherBalance } from "@usedapp/core";
 
 import { useSymbol } from '../../hooks/useSymbol';
 import { formatCurrency, formatAccount } from '../../utils/cryptoutils/';
+import { signMessage, getAuthKey } from '../../utils/auth';
+import { getItem, removeItem, setItem } from '../../utils/storage';
+import { globals } from '../../utils/constants';
 
 const ConnectButton = ({label}) => {
   // hooks
-  const { activateBrowserWallet, account, chainId } = useEthers();
+  const { activateBrowserWallet, account, chainId, library: connection } = useEthers();
   const etherBalance = useEtherBalance(account);
 
   const symbol = useSymbol(chainId);
 
+  useEffect(() => {
+    const handleAcctChange = async () => {
+      if(!account){
+        return;
+      }
+
+      const key = getAuthKey('swc');
+      const item = getItem(key);
+      console.log('debug:', item);
+      if(!item || (item.authData && item.authData.address!==account)) {
+        console.log('sign a new message - key:', key);
+        const sig = await signMessage({message: globals.signatureMessage, connection});
+        if(sig.success) {
+          console.log('saving authData- key:', key);
+          setItem(key, {
+            authData: {
+              'message': sig.message,
+              'address': sig.address,
+              'signature': sig.signature,
+            }
+          })
+        }
+      }      
+    };
+    console.log('--- account change event:', account);
+    handleAcctChange();
+  }, [account, connection]);
+  
   // functions
   const handleConnect = () => {
     activateBrowserWallet();
   };
 
   // logs
-  console.log('account, chainId, balance', account, chainId, etherBalance);
+  // console.log('account, chainId, balance', account, chainId, etherBalance);
   
   // render out
   return (

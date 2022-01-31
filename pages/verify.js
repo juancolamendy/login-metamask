@@ -1,23 +1,9 @@
 import React, { useState } from 'react';
-import { ethers } from "ethers";
 
 import { ErrorMessage } from '../components/ErrorMessage';
 import { SuccessMessage } from '../components/SuccessMessage';
-
-const verifyMessage = async ({ message, signer, signature }) => {
-  console.log('message, signer, signature:', message, signer, signature);
-  try {
-    const signerAddr = await ethers.utils.verifyMessage(message, signature);
-    if (signerAddr !== signer) {
-      return false;
-    }
-
-    return true;
-  } catch (err) {
-    console.log('verifyMessage error:', err);
-    return false;
-  }
-};
+import { verifyMessage, getAuthKey } from '../utils/auth';
+import { getItem } from '../utils/storage';
 
 const Verify = () => {
   // hooks
@@ -32,7 +18,7 @@ const Verify = () => {
     e.preventDefault();
 
     setError('');
-    setMessage('');
+    setSuccess('');
 
     const isValid = await verifyMessage({message, signer, signature});
 
@@ -41,6 +27,24 @@ const Verify = () => {
     } else {
       setError("Invalid signature");
     } 
+  };
+
+  const handleVerifyAuthData = async (e) => {
+    e.preventDefault();
+    console.log('--- handleVerifyAuthData');
+
+    const key = getAuthKey('swc');
+    const item = getItem(key);
+
+		const resp = await fetch('/api/verify', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},      
+      body: JSON.stringify(item),
+		});
+    const data = await resp.json();
+    console.log('data: ', data);
   };
 
   // render out
@@ -85,7 +89,14 @@ const Verify = () => {
             type="submit"
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            Sign message
+            Verify message
+          </button>
+          <button
+            type="button"
+            className="group relative w-full flex justify-center mt-4 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={handleVerifyAuthData}
+          >
+            Verify stored authData
           </button>
           <ErrorMessage message={error} />
           <SuccessMessage message={success} />

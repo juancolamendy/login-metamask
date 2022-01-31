@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useEthers } from "@usedapp/core";
 import { ethers } from 'ethers';
 import Web3Modal from "web3modal";
@@ -8,7 +8,7 @@ import { connectToInjected, connectToWalletConnect } from '../utils/web3connect'
 
 export default function Home() {
   // hooks
-  const { library } = useEthers();
+  const { library: connection } = useEthers();
 
   // functions
   const handleWe3ModalConnect = async () => {
@@ -69,8 +69,8 @@ export default function Home() {
   };
 
   // logs
-  // library is an instance of ethers Web3Provider
-  console.log('signer:', library && library.getSigner());
+  // connection is an instance of ethers Web3Provider
+  // console.log('signer:', connection && connection.getSigner());
   
   // render out
   return (
@@ -81,21 +81,21 @@ export default function Home() {
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           onClick={handleWe3ModalConnect}
         >
-          { library ? 'Connected ...' : 'Connect With Web3Modal' }
+          { connection ? 'Connected ...' : 'Connect With Web3Modal' }
         </button>
         <button
           type="submit"
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           onClick={handleMetamaskConnect}
         >
-          { library ? 'Connected ...' : 'Connect With MetaMask' }
+          { connection ? 'Connected ...' : 'Connect With MetaMask' }
         </button>
         <button
           type="submit"
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           onClick={handleWallectConnect}
         >
-          { library ? 'Connected ...' : 'Connect With WalletConnect' }
+          { connection ? 'Connected ...' : 'Connect With WalletConnect' }
         </button>
       </div>
     </div>

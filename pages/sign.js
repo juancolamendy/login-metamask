@@ -2,32 +2,11 @@ import React, { useState } from 'react';
 import { useEthers } from "@usedapp/core";
 
 import { ErrorMessage } from '../components/ErrorMessage';
-
-const signMessage = async ({ message, library }) => {
-  try {
-    console.log({ message });
-    if (!library)
-      throw new Error("No crypto wallet found. Please install it.");
-
-    const signer = library.getSigner();
-    const signature = await signer.signMessage(message);
-    const address = await signer.getAddress();
-
-    return {
-      message,
-      signature,
-      address,
-      success: true,
-    };
-  } catch (err) {
-    console.log('signMessage error:', err);
-    return {success: false, error: err};
-  }
-};
+import { signMessage } from '../utils/auth';
 
 const Sign = () => {
   // hooks
-  const { library } = useEthers();
+  const { library: connection } = useEthers();
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [signatures, setSignatures] = useState([]);
@@ -38,7 +17,8 @@ const Sign = () => {
 
     // reset error
     setError('');
-    const sig = await signMessage({message, library});
+    const sig = await signMessage({message, connection});
+    console.log(sig);
     if(sig.success) {
       setSignatures([...signatures, sig]);
     } else {
