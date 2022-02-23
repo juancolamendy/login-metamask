@@ -5,16 +5,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "ssl": "local-ssl-proxy --source 3001 --target 3000"
   },
   "dependencies": {
-    "@usedapp/core": "^0.7.1",
-    "@walletconnect/web3-provider": "^1.6.6",
+    "@usedapp/core": "^0.11.0",
+    "@walletconnect/web3-provider": "^1.7.1",
+    "@web3-react/walletconnect-connector": "6.2.10",
     "ethers": "^5.4.0",
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "web3modal": "^1.9.4"
+    "web3modal": "^1.9.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
