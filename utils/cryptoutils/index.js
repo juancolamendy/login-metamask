@@ -10,5 +10,4 @@ export const findChainById = (chainId) => {
   const chain = chains[chainId];
   console.log(chain);
   return chain || {};
-  // return chains[chainId];
 };

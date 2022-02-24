@@ -5,30 +5,34 @@ import { useEthers, useEtherBalance } from "@usedapp/core";
 
 import { useSymbol } from '../../hooks/useSymbol';
 import { formatCurrency, formatAccount } from '../../utils/cryptoutils/';
-import { getAuthKey } from '../../utils/auth';
-import { removeItem } from '../../utils/storage';
+
+import { globals } from '../../utils/constants';
+
+import { doConnect, useRefreshConnection, doDisconnect } from '../../utils/web3auth';
 
 const ConnectButton = ({label}) => {
   // hooks
-  const { activateBrowserWallet, deactivate, account, chainId } = useEthers();
+  const { activate, deactivate, account, chainId } = useEthers();
   const etherBalance = useEtherBalance(account);
 
   const symbol = useSymbol(chainId);
   
+  // onload - refresh the connection
+  useRefreshConnection( globals.getConfig({ activate, deactivate }) );
+  
   // functions
-  const handleConnect = () => {
-    activateBrowserWallet();
+  const handleConnect = (e) => {
+    e.preventDefault();
+    
+    // doConnect
+    doConnect( globals.getConfig({activate, deactivate}) );
   };
 
   const handleDisconnect = (e) => {
     e.preventDefault();
 
-    // remove stored auth info
-    const key = getAuthKey('swc');
-    removeItem(key);
-
-    // deactivate
-    deactivate();
+    // doDisconnect
+    doDisconnect( globals.getConfig({activate, deactivate}) );
   };
 
   // logs

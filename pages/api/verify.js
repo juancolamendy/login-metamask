@@ -1,4 +1,4 @@
-import { verifyMessage } from '../../utils/auth';
+import { verifyMessage } from '../../utils/web3auth';
 
 export default async function handler(req, res) {
   const { authData } = req.body;

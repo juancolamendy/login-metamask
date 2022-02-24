@@ -1,4 +1,4 @@
-import { chainList } from '../constants';
+import chains from './chains';
 
 export function filterMatches(array, condition, fallback) {
   let result = fallback;
@@ -12,8 +12,8 @@ export function filterMatches(array, condition, fallback) {
 };
 
 export function getChainId(network) {
-  const chains = Object.values(chainList);
-  const match = filterMatches(chains, x => x.network === network, undefined);
+  const c = Object.values(chains);
+  const match = filterMatches(c, x => x.network === network, undefined);
   if (!match) {
     throw new Error(`No chainId found match ${network}`);
   }

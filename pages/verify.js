@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 
 import { ErrorMessage } from '../components/ErrorMessage';
 import { SuccessMessage } from '../components/SuccessMessage';
-import { verifyMessage, getAuthKey } from '../utils/auth';
-import { getItem } from '../utils/storage';
+import { verifyMessage, getAuthKey } from '../utils/web3auth';
 
 const Verify = () => {
   // hooks
@@ -34,7 +33,7 @@ const Verify = () => {
     console.log('--- handleVerifyAuthData');
 
     const key = getAuthKey('swc');
-    const item = getItem(key);
+    const item = JSON.parse(window.localStorage.getItem(key));
 
 		const resp = await fetch('/api/verify', {
 			method: 'POST',

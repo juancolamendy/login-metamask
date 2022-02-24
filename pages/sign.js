@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useEthers } from "@usedapp/core";
 
 import { ErrorMessage } from '../components/ErrorMessage';
-import { signMessage } from '../utils/auth';
+import { signMessage } from '../utils/web3auth';
 
 const Sign = () => {
   // hooks
@@ -17,7 +17,7 @@ const Sign = () => {
 
     // reset error
     setError('');
-    const sig = await signMessage({message, connection});
+    const sig = await signMessage({message, provider: connection});
     console.log(sig);
     if(sig.success) {
       setSignatures([...signatures, sig]);
