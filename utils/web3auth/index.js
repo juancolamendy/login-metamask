@@ -97,8 +97,30 @@ export const verifyMessage = async ({ message, signer, signature }) => {
   return true;
 };
 
+export const verifyAuthHttpReq = async req => {
+  const data = req.body;
+  console.log('request data:', data);
+
+  // protect endpoint
+  let isValid = false;
+  if(data.auth && data.auth.authData){
+    isValid = await verifyMessage({
+      message: data.auth.authData.message,
+      signer: data.auth.authData.signer,
+      signature: data.auth.authData.signature
+    });
+  }
+  return isValid;
+};
+
 export const getAuthKey = app => {
   return `authData/${app}`;
+};
+
+export const getAuthData = () => {
+  const key = getAuthKey('swc');
+  const item = JSON.parse(window.localStorage.getItem(key));
+  return item;
 };
 
 export const doSignature = async ({ provider, message }) => {
